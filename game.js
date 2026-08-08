@@ -28,25 +28,23 @@ function switchPhase(hideEl, showEl) {
 }
 
 function setDaytime(icon, label, phaseClass) {
-    let iconEl = document.getElementById('daytime-icon');
-    let labelEl = document.getElementById('daytime-label');
-    let barEl = document.getElementById('daytime-indicator');
-    if (!iconEl || !labelEl || !barEl) return;
-
-    iconEl.innerText = icon;
-    labelEl.innerText = label;
-
-    barEl.classList.remove('daytime-morning', 'daytime-noon', 'daytime-evening');
-    barEl.classList.add(phaseClass);
+    let stepMorning = document.getElementById('step-morning');
+    let stepNoon = document.getElementById('step-noon');
+    let stepEvening = document.getElementById('step-evening');
+    
+    if (stepMorning && stepNoon && stepEvening) {
+        stepMorning.classList.remove('active');
+        stepNoon.classList.remove('active');
+        stepEvening.classList.remove('active');
+        
+        if (phaseClass === 'daytime-morning') stepMorning.classList.add('active');
+        if (phaseClass === 'daytime-noon') stepNoon.classList.add('active');
+        if (phaseClass === 'daytime-evening') stepEvening.classList.add('active');
+    }
 
     // Đổi màu nền toàn trang theo buổi (sáng/trưa/tối)
     document.body.classList.remove('time-morning', 'time-noon', 'time-evening');
     document.body.classList.add(phaseClass.replace('daytime-', 'time-'));
-
-    // Buộc trình duyệt reset animation để chạy lại hiệu ứng "pop"
-    iconEl.classList.remove('daytime-pop');
-    void iconEl.offsetWidth;
-    iconEl.classList.add('daytime-pop');
 }
 
 function playAnim(el, className) {
@@ -902,7 +900,7 @@ function startNoon() {
     document.getElementById('current-case').classList.remove('case-slide-out', 'case-slide-in');
     
     // Reset lịch sử vào đầu buổi làm việc
-    document.getElementById('history-log').innerHTML = '<div class="log-item" style="color: gray; font-style: italic;">Lịch sử trống...</div>';
+    document.getElementById('history-log').innerHTML = '<div class="log-item empty-log">Hệ thống sẵn sàng...</div>';
     
     let availableCases = caseDatabase.filter(c => !gameState.solvedCases.has(c.id));
     if (availableCases.length === 0) {
@@ -1043,6 +1041,7 @@ function endDay() {
     gameState.stats.marketDynamics += alloc.market;
     gameState.stats.socialEquity += alloc.equity;
     gameState.stats.institutionalDiscipline += alloc.discipline;
+    updateProgressBars();
     
     gameState.day++;
     startMorning();
@@ -1076,10 +1075,8 @@ function startMorning() {
     // Reset bộ đệm
     gameState.bufferStats = { marketDynamics: 0, socialEquity: 0, institutionalDiscipline: 0 };
     
-    // Cập nhật Cột Hiện Tại
-    document.getElementById('val-market').innerText = gameState.stats.marketDynamics;
-    document.getElementById('val-equity').innerText = gameState.stats.socialEquity;
-    document.getElementById('val-discipline').innerText = gameState.stats.institutionalDiscipline;
+    // Cập nhật Cột Hiện Tại & Progress Bar
+    updateProgressBars();
     
     // KIỂM TRA SỤP ĐỔ
     let reason = checkGameOver();
@@ -1124,14 +1121,14 @@ function checkGameOver() {
 
 // --- 7. HÀM HỖ TRỢ LỊCH SỬ ---
 function formatImpact(val) {
-    if (val === 0) return `<span style="color:gray;">0</span>`;
-    return val > 0 ? `<span style="color:#27ae60;font-weight:bold;">+${val}</span>` : `<span style="color:#c0392b;font-weight:bold;">${val}</span>`;
+    if (val === 0) return `<span style="color:var(--text-muted);">0</span>`;
+    return val > 0 ? `<span style="color:var(--color-success);font-weight:bold;">+${val}</span>` : `<span style="color:var(--color-danger);font-weight:bold;">${val}</span>`;
 }
 
 function addHistoryLog(htmlContent) {
     let logDiv = document.getElementById('history-log');
     
-    if (logDiv.innerHTML.includes("Lịch sử trống...")) {
+    if (logDiv.innerHTML.includes("Hệ thống sẵn sàng...")) {
         logDiv.innerHTML = "";
     }
     
@@ -1142,3 +1139,23 @@ function addHistoryLog(htmlContent) {
     // Thêm lên đầu danh sách
     logDiv.prepend(entry);
 }
+
+function updateProgressBars() {
+    let m = gameState.stats.marketDynamics;
+    let e = gameState.stats.socialEquity;
+    let d = gameState.stats.institutionalDiscipline;
+    
+    document.getElementById('val-market').innerText = m;
+    document.getElementById('val-equity').innerText = e;
+    document.getElementById('val-discipline').innerText = d;
+    
+    document.getElementById('bar-market').style.width = m + '%';
+    document.getElementById('bar-equity').style.width = e + '%';
+    document.getElementById('bar-discipline').style.width = d + '%';
+    
+    let dayDisplay = document.getElementById('current-day-display');
+    if (dayDisplay) dayDisplay.innerText = gameState.day;
+}
+
+// Init on load
+window.onload = function() { updateProgressBars(); };

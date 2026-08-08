@@ -2,19 +2,31 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>The Macro-Pie — Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Macro-Pie — Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="menu-body">
 
-<div id="phase-menu">
-    <div class="menu-box">
-        <h1 class="menu-title">🥧 The Macro-Pie</h1>
-        <p class="menu-subtitle">Trò chơi hoạch định chính sách vĩ mô</p>
-        <a href="gameplay.html" id="start-btn" class="menu-btn-main" onclick="startGame(event)">▶ Bắt Đầu</a>
-        <button onclick="openInstructions()" class="menu-btn-secondary">📖 Hướng Dẫn</button>
+<main id="phase-menu">
+    <div class="menu-box glass-panel">
+        <div class="menu-logo">🥧</div>
+        <h1 class="menu-title">The Macro-Pie</h1>
+        <p class="menu-subtitle">Strategic Policy Simulator</p>
+        
+        <div class="menu-actions">
+            <a href="gameplay.html" id="start-btn" class="btn btn-primary btn-large" onclick="startGame(event)">
+                <span class="icon">▶</span> Bắt Đầu Nhiệm Kỳ
+            </a>
+            <button onclick="openInstructions()" class="btn btn-secondary btn-large">
+                <span class="icon">📖</span> Tài Liệu Hướng Dẫn
+            </button>
+        </div>
     </div>
-</div>
+</main>
 
 <!-- OVERLAY HIỆU ỨNG CHUYỂN CẢNH -->
 <div id="transition-overlay">
@@ -22,41 +34,68 @@
 </div>
 
 <!-- POPUP HƯỚNG DẪN -->
-<div id="instructions-modal" style="display: none;">
-    <div class="modal-box">
-        <h2 style="margin-top: 0; border-bottom: 2px solid #ccc; padding-bottom: 10px;">📖 Hướng Dẫn Chơi</h2>
-        <div class="instructions-text">
-            <p><strong>Mục tiêu:</strong> Giữ 3 chỉ số vĩ mô — Động lực Thị trường, Công bằng Xã hội, Kỷ cương Thể chế — trong khoảng an toàn (0–100%) càng lâu càng tốt. Chạm đáy hoặc kịch trần bất kỳ chỉ số nào cũng khiến thể chế sụp đổ.</p>
-            <p><strong>🌅 Buổi sáng:</strong> Đọc bản tin tổng kết hậu quả từ quyết định hôm qua.</p>
-            <p><strong>🖊️ Buổi trưa:</strong> Xử lý các hồ sơ chính sách. Với mỗi hồ sơ, bạn có thể:</p>
-            <ul>
-                <li><strong>ĐÓNG DẤU DUYỆT</strong> — chấp thuận đề xuất</li>
-                <li><strong>BÁC BỎ</strong> — từ chối đề xuất</li>
-                <li><strong>HỎI CỐ VẤN</strong> — nghe ý kiến từ 3 bộ trưởng trước khi quyết định</li>
-            </ul>
-            <p>Mỗi quyết định sẽ ảnh hưởng đến 3 chỉ số theo các mức độ khác nhau — có lợi mặt này thường phải đánh đổi mặt khác.</p>
-            <p><strong>🌙 Buổi tối:</strong> Bạn có một ngân sách điểm giới hạn để chủ động "bơm" thêm vào các chỉ số đang ở mức báo động, nhằm cân bằng lại trước ngày hôm sau.</p>
-            <p><strong>⚠️ Lưu ý:</strong> Hậu quả của các quyết định buổi trưa chỉ phát huy tác dụng vào sáng hôm sau (có độ trễ), nên hãy cân nhắc kỹ trước khi quyết định.</p>
+<div id="instructions-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box glass-panel">
+        <header class="modal-header">
+            <h2>📖 Hướng Dẫn Điều Hành</h2>
+            <button class="btn-close" aria-label="Close" onclick="closeInstructions()">×</button>
+        </header>
+        <div class="modal-body instructions-text">
+            <p class="objective"><strong>Mục tiêu:</strong> Giữ 3 chỉ số vĩ mô — <strong>Động lực Thị trường</strong>, <strong>Công bằng Xã hội</strong>, <strong>Kỷ cương Thể chế</strong> — trong khoảng an toàn (0–100%) càng lâu càng tốt. Chạm đáy hoặc kịch trần bất kỳ chỉ số nào cũng khiến thể chế sụp đổ.</p>
+            
+            <div class="instruction-phase">
+                <h3>🌅 Buổi sáng</h3>
+                <p>Đọc bản tin tổng kết, đánh giá hậu quả từ quyết định hôm qua.</p>
+            </div>
+
+            <div class="instruction-phase">
+                <h3>🖊️ Buổi trưa</h3>
+                <p>Xử lý các hồ sơ chính sách. Với mỗi hồ sơ, bạn có thể:</p>
+                <ul class="action-list">
+                    <li><span class="badge badge-approve">ĐÓNG DẤU DUYỆT</span> Chấp thuận đề xuất</li>
+                    <li><span class="badge badge-reject">BÁC BỎ</span> Từ chối đề xuất</li>
+                    <li><span class="badge badge-advisor">HỎI CỐ VẤN</span> Tham vấn ý kiến từ 3 bộ trưởng</li>
+                </ul>
+            </div>
+
+            <div class="instruction-phase">
+                <h3>🌙 Buổi tối</h3>
+                <p>Sử dụng <strong>Ngân sách dự phòng (10 điểm)</strong> để "bơm" trực tiếp vào các chỉ số đang báo động, cân bằng lại trước ngày mới.</p>
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>⚠️ Lưu ý:</strong> Hậu quả của các quyết định buổi trưa chỉ phát huy tác dụng vào sáng hôm sau (có độ trễ). Hãy tính toán cẩn thận!
+            </div>
         </div>
-        <button onclick="closeInstructions()" style="background: #7f8c8d; margin-top: 20px;">Đã Hiểu, Đóng Lại</button>
+        <footer class="modal-footer">
+            <button class="btn btn-primary" onclick="closeInstructions()">Đã Hiểu</button>
+        </footer>
     </div>
 </div>
 
 <script>
 function openInstructions() {
-    document.getElementById('instructions-modal').style.display = 'flex';
+    const modal = document.getElementById('instructions-modal');
+    modal.style.display = 'flex';
+    // Force reflow
+    void modal.offsetWidth;
+    modal.classList.add('show');
 }
 function closeInstructions() {
-    document.getElementById('instructions-modal').style.display = 'none';
+    const modal = document.getElementById('instructions-modal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
 }
 
 function startGame(e) {
     e.preventDefault();
-    var overlay = document.getElementById('transition-overlay');
+    const overlay = document.getElementById('transition-overlay');
     overlay.classList.add('active');
-    setTimeout(function () {
+    setTimeout(() => {
         window.location.href = 'gameplay.html';
-    }, 750);
+    }, 800);
 }
 </script>
 

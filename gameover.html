@@ -2,37 +2,54 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Macro-Pie — Sụp Đổ Thể Chế</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="gameover-body">
 
-<div id="phase-gameover">
-    <div class="gameover-box">
-        <div class="gameover-icon">💥</div>
-        <h1 class="gameover-title">SỤP ĐỔ THỂ CHẾ!</h1>
-        <p class="gameover-day" id="go-day">Ngày tại vị: —</p>
-        <p class="gameover-reason" id="go-reason">...</p>
+<main id="phase-gameover">
+    <div class="gameover-box glass-panel crash-panel">
+        <div class="gameover-icon pulse-danger">⚠️</div>
+        <h1 class="gameover-title">CRITICAL FAILURE</h1>
+        <div class="gameover-status-badge">SỤP ĐỔ THỂ CHẾ</div>
+        
+        <div class="gameover-info">
+            <p class="gameover-day" id="go-day">Ngày tại vị: <span>—</span></p>
+            <p class="gameover-reason" id="go-reason">Đang truy xuất nguyên nhân sụp đổ...</p>
+        </div>
 
         <div class="gameover-stats" id="go-stats">
-            <div class="gameover-stat">
-                <span>📈 Động lực</span>
-                <strong id="go-val-market">—</strong>%
+            <div class="stat-card">
+                <div class="stat-icon" style="color: var(--color-market)">📈</div>
+                <div class="stat-label">Động lực TT</div>
+                <strong class="stat-value" id="go-val-market">—</strong>
             </div>
-            <div class="gameover-stat">
-                <span>⚖️ Công bằng</span>
-                <strong id="go-val-equity">—</strong>%
+            <div class="stat-card">
+                <div class="stat-icon" style="color: var(--color-equity)">⚖️</div>
+                <div class="stat-label">Công bằng XH</div>
+                <strong class="stat-value" id="go-val-equity">—</strong>
             </div>
-            <div class="gameover-stat">
-                <span>🏛️ Kỷ cương</span>
-                <strong id="go-val-discipline">—</strong>%
+            <div class="stat-card">
+                <div class="stat-icon" style="color: var(--color-discipline)">🏛️</div>
+                <div class="stat-label">Kỷ cương TC</div>
+                <strong class="stat-value" id="go-val-discipline">—</strong>
             </div>
         </div>
 
-        <a href="gameplay.html" class="menu-btn-main" onclick="sessionStorage.removeItem('macropieGameOver')">🔄 Chơi Lại</a>
-        <a href="index.html" class="menu-btn-secondary" style="text-decoration:none; box-sizing:border-box; display:block; text-align:center;">🏠 Về Menu</a>
+        <div class="gameover-actions">
+            <a href="gameplay.html" class="btn btn-primary btn-large" onclick="sessionStorage.removeItem('macropieGameOver')">
+                <span class="icon">🔄</span> Bắt Đầu Lại Từ Đầu
+            </a>
+            <a href="index.html" class="btn btn-secondary">
+                <span class="icon">🏠</span> Về Trung Tâm Điều Hành
+            </a>
+        </div>
     </div>
-</div>
+</main>
 
 <script>
 (function () {
@@ -41,18 +58,18 @@
     try { data = raw ? JSON.parse(raw) : null; } catch (e) { data = null; }
 
     if (!data) {
-        // Không có dữ liệu thua cuộc (ví dụ người dùng vào thẳng trang này) -> quay về menu
+        // Không có dữ liệu thua cuộc -> quay về menu
         window.location.href = 'index.html';
         return;
     }
 
-    document.getElementById('go-day').innerText = 'Ngày tại vị: ' + data.day;
+    document.getElementById('go-day').innerHTML = 'Thời gian cầm quyền: <span>' + data.day + ' ngày</span>';
     document.getElementById('go-reason').innerText = data.reason;
 
     if (data.stats) {
-        document.getElementById('go-val-market').innerText = data.stats.marketDynamics;
-        document.getElementById('go-val-equity').innerText = data.stats.socialEquity;
-        document.getElementById('go-val-discipline').innerText = data.stats.institutionalDiscipline;
+        document.getElementById('go-val-market').innerText = data.stats.marketDynamics + '%';
+        document.getElementById('go-val-equity').innerText = data.stats.socialEquity + '%';
+        document.getElementById('go-val-discipline').innerText = data.stats.institutionalDiscipline + '%';
     }
 })();
 </script>

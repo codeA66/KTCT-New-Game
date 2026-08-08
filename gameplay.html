@@ -2,106 +2,211 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Macro-Pie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="time-morning">
 
 <div id="app-wrapper">
-    <!-- CỘT TRÁI: KHUNG GAME CHÍNH -->
-    <div id="game-container">
-        <!-- CHỈ BÁO BUỔI TRONG NGÀY -->
-        <div id="daytime-indicator" class="daytime-morning">
-            <span id="daytime-icon" class="daytime-icon">🌅</span>
-            <span id="daytime-label">Buổi Sáng</span>
-        </div>
-
-        <!-- BUỔI SÁNG: BÁO CÁO -->
-        <section id="phase-morning" class="phase-screen">
-            <div class="newspaper-ui">
-                <h1 id="news-headline">Ngày 1: Bắt đầu nhiệm kỳ</h1>
-                <div id="news-details">Chào mừng Kiến trúc sư trưởng. Hãy đưa ra quyết định sáng suốt!</div>
-                <button onclick="startNoon()">Tới Bàn Làm Việc (Buổi Trưa)</button>
-            </div>
-        </section>
-
-        <!-- BUỔI TRƯA: XỬ LÝ HỒ SƠ -->
-        <section id="phase-noon" class="phase-screen" style="display: none;">
-            <div class="desk-ui">
-                <div id="current-case">
-                    <h2 id="case-title">Đang nạp hồ sơ...</h2>
-                    <p id="case-desc">...</p>
-                    <div id="stamp-overlay" class="stamp-overlay"></div>
-                </div>
-                <div class="actions">
-                    <button id="btn-approve" onclick="decideCase(true)" style="background: #27ae60;">ĐÓNG DẤU DUYỆT</button>
-                    <button id="btn-reject" onclick="decideCase(false)" style="background: #c0392b;">BÁC BỎ</button>
-                    <button id="btn-advisor" onclick="openAdvisors()" style="background: #f39c12; color: #333;">HỎI CỐ VẤN</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- BUỔI TỐI: CHIA NGÂN SÁCH -->
-        <section id="phase-evening" class="phase-screen" style="display: none;">
-            <div class="sliders-ui">
-                <h2>Chia Ngân Sách Phục Hồi (Còn: <span id="points-left">10</span> điểm)</h2>
-                <p><i>Phân bổ điểm để cứu vãn các chỉ số đang ở mức báo động đỏ!</i></p>
-                
-                <div class="stat-allocate">
-                    <label>Bơm Động lực</label>
-                    <div class="stepper">
-                        <button onclick="adjustPoints('market', -1)">-</button>
-                        <span id="alloc-market">0</span>
-                        <button onclick="adjustPoints('market', 1)">+</button>
-                    </div>
-                </div>
-                <div class="stat-allocate">
-                    <label>Bơm Công bằng</label>
-                    <div class="stepper">
-                        <button onclick="adjustPoints('equity', -1)">-</button>
-                        <span id="alloc-equity">0</span>
-                        <button onclick="adjustPoints('equity', 1)">+</button>
-                    </div>
-                </div>
-                <div class="stat-allocate">
-                    <label>Bơm Kỷ cương</label>
-                    <div class="stepper">
-                        <button onclick="adjustPoints('discipline', -1)">-</button>
-                        <span id="alloc-discipline">0</span>
-                        <button onclick="adjustPoints('discipline', 1)">+</button>
-                    </div>
-                </div>
-                <button onclick="endDay()" style="margin-top: 20px;">Kết Thúc Ngày (Ngủ)</button>
-            </div>
-        </section>
-    </div>
-
-    <!-- CỘT PHẢI: THỐNG KÊ & LỊCH SỬ -->
-    <div id="sidebar">
-        <h3 style="margin-top: 0;">📊 Điểm Hiện Tại</h3>
-        <div class="current-stats">
-            <p>📈 Động lực: <strong id="val-market">50</strong>%</p>
-            <p>⚖️ Công bằng: <strong id="val-equity">50</strong>%</p>
-            <p>🏛️ Kỷ cương: <strong id="val-discipline">50</strong>%</p>
+    <!-- CỘT TRÁI/TRÊN CÙNG: THỐNG KÊ (Dạng Dashboard Bar trên Mobile, Sidebar trên Desktop) -->
+    <aside id="sidebar" class="glass-panel">
+        <div class="sidebar-header">
+            <h3>Trạng thái Vĩ mô</h3>
+            <div id="day-counter">Ngày <span id="current-day-display">1</span></div>
         </div>
         
-        <h3>📜 Lịch sử Ảnh hưởng</h3>
-        <div id="history-log">
-            <div class="log-item" style="color: gray; font-style: italic;">
-                Lịch sử trống...
+        <div class="stats-container">
+            <div class="stat-row">
+                <div class="stat-info">
+                    <span class="stat-label"><span class="stat-icon" style="color: var(--color-market)">📈</span> Động lực Thị trường</span>
+                    <strong class="stat-value" id="val-market">50</strong>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill bg-market" id="bar-market" style="width: 50%"></div></div>
+            </div>
+            
+            <div class="stat-row">
+                <div class="stat-info">
+                    <span class="stat-label"><span class="stat-icon" style="color: var(--color-equity)">⚖️</span> Công bằng Xã hội</span>
+                    <strong class="stat-value" id="val-equity">50</strong>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill bg-equity" id="bar-equity" style="width: 50%"></div></div>
+            </div>
+            
+            <div class="stat-row">
+                <div class="stat-info">
+                    <span class="stat-label"><span class="stat-icon" style="color: var(--color-discipline)">🏛️</span> Kỷ cương Thể chế</span>
+                    <strong class="stat-value" id="val-discipline">50</strong>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill bg-discipline" id="bar-discipline" style="width: 50%"></div></div>
             </div>
         </div>
-    </div>
+
+        <div class="history-section">
+            <h3><span class="icon">📜</span> Nhật ký Hoạt động</h3>
+            <div id="history-log">
+                <!-- Log sẽ đổ vào đây -->
+                <div class="log-item empty-log">Hệ thống sẵn sàng...</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CỘT PHẢI: KHUNG GAME CHÍNH -->
+    <main id="game-container">
+        
+        <!-- HEADER: HUD HIỂN THỊ PHASE -->
+        <header id="top-hud" class="glass-panel">
+            <div class="phase-timeline">
+                <div class="phase-step active" id="step-morning">
+                    <span class="step-icon">🌅</span>
+                    <span class="step-label">Sáng</span>
+                </div>
+                <div class="phase-connector"></div>
+                <div class="phase-step" id="step-noon">
+                    <span class="step-icon">☀️</span>
+                    <span class="step-label">Trưa</span>
+                </div>
+                <div class="phase-connector"></div>
+                <div class="phase-step" id="step-evening">
+                    <span class="step-icon">🌙</span>
+                    <span class="step-label">Tối</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="phase-content-area">
+            <!-- BUỔI SÁNG: BÁO CÁO -->
+            <section id="phase-morning" class="phase-screen">
+                <div class="briefing-card glass-panel">
+                    <div class="briefing-header">
+                        <span class="briefing-icon">📋</span>
+                        <h1 id="news-headline">Báo cáo Đầu ngày</h1>
+                    </div>
+                    <div class="briefing-content">
+                        <div id="news-details">
+                            <!-- Tin tức sẽ render ở đây -->
+                            <p>Đang tải dữ liệu...</p>
+                        </div>
+                    </div>
+                    <div class="briefing-actions">
+                        <button class="btn btn-primary btn-large w-100" onclick="startNoon()">
+                            <span class="icon">💻</span> Bắt đầu Xử lý Hồ sơ
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BUỔI TRƯA: XỬ LÝ HỒ SƠ -->
+            <section id="phase-noon" class="phase-screen" style="display: none;">
+                <div class="dossier-card glass-panel" id="current-case">
+                    <div class="dossier-header">
+                        <div class="dossier-badge">TÀI LIỆU MẬT</div>
+                        <h2 id="case-title">Đang nạp hồ sơ...</h2>
+                    </div>
+                    <div class="dossier-body">
+                        <p id="case-desc">...</p>
+                    </div>
+                    
+                    <div id="stamp-overlay" class="stamp-overlay"></div>
+                </div>
+                
+                <div class="action-zone">
+                    <button id="btn-approve" class="btn btn-action btn-approve" onclick="decideCase(true)">
+                        <span class="icon">✅</span> ĐÓNG DẤU DUYỆT
+                    </button>
+                    <button id="btn-reject" class="btn btn-action btn-reject" onclick="decideCase(false)">
+                        <span class="icon">❌</span> BÁC BỎ
+                    </button>
+                    <button id="btn-advisor" class="btn btn-action btn-advisor" onclick="openAdvisors()">
+                        <span class="icon">👥</span> HỎI CỐ VẤN
+                    </button>
+                </div>
+            </section>
+
+            <!-- BUỔI TỐI: CHIA NGÂN SÁCH -->
+            <section id="phase-evening" class="phase-screen" style="display: none;">
+                <div class="budget-card glass-panel">
+                    <div class="budget-header">
+                        <h2>Phân bổ Ngân sách Phục hồi</h2>
+                        <div class="budget-remaining">
+                            Còn lại: <span id="points-left" class="points-badge">10</span> điểm
+                        </div>
+                        <p class="budget-subtitle">Hãy hỗ trợ các lĩnh vực đang yếu kém trước khi kết thúc ngày.</p>
+                    </div>
+                    
+                    <div class="budget-allocators">
+                        <div class="allocator-row">
+                            <div class="allocator-label">
+                                <span class="stat-icon" style="color: var(--color-market)">📈</span> Động lực TT
+                            </div>
+                            <div class="stepper-control">
+                                <button class="btn-stepper minus" onclick="adjustPoints('market', -1)">-</button>
+                                <span class="stepper-value" id="alloc-market">0</span>
+                                <button class="btn-stepper plus" onclick="adjustPoints('market', 1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="allocator-row">
+                            <div class="allocator-label">
+                                <span class="stat-icon" style="color: var(--color-equity)">⚖️</span> Công bằng XH
+                            </div>
+                            <div class="stepper-control">
+                                <button class="btn-stepper minus" onclick="adjustPoints('equity', -1)">-</button>
+                                <span class="stepper-value" id="alloc-equity">0</span>
+                                <button class="btn-stepper plus" onclick="adjustPoints('equity', 1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="allocator-row">
+                            <div class="allocator-label">
+                                <span class="stat-icon" style="color: var(--color-discipline)">🏛️</span> Kỷ cương TC
+                            </div>
+                            <div class="stepper-control">
+                                <button class="btn-stepper minus" onclick="adjustPoints('discipline', -1)">-</button>
+                                <span class="stepper-value" id="alloc-discipline">0</span>
+                                <button class="btn-stepper plus" onclick="adjustPoints('discipline', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="budget-actions">
+                        <button class="btn btn-primary btn-large w-100" onclick="endDay()">
+                            <span class="icon">🛌</span> Hoàn tất & Kết thúc Ngày
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
 </div>
 
 <!-- POPUP CỐ VẤN (Mặc định ẩn) -->
-<div id="advisor-modal" style="display: none;">
-    <div class="modal-box">
-        <h2 style="margin-top: 0; border-bottom: 2px solid #ccc; padding-bottom: 10px;">Tham vấn Ý kiến</h2>
-        <p id="adv-market" class="adv-text" style="color: #d35400;"><strong>📈 Bộ trưởng Kinh tế:</strong> <br><span>...</span></p>
-        <p id="adv-equity" class="adv-text" style="color: #27ae60;"><strong>⚖️ Bộ trưởng Xã hội:</strong> <br><span>...</span></p>
-        <p id="adv-discipline" class="adv-text" style="color: #8e44ad;"><strong>🏛️ Trưởng ban Pháp chế:</strong> <br><span>...</span></p>
-        <button onclick="closeAdvisors()" style="background: #7f8c8d; margin-top: 20px;">Đóng Lại</button>
+<div id="advisor-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box glass-panel advisor-modal-box">
+        <header class="modal-header">
+            <h2>👥 Tham vấn Ban Bộ Trưởng</h2>
+            <button class="btn-close" aria-label="Close" onclick="closeAdvisors()">×</button>
+        </header>
+        <div class="modal-body advisor-list">
+            <div class="advisor-card border-market">
+                <div class="advisor-title">📈 Bộ trưởng Kinh tế</div>
+                <p id="adv-market" class="adv-text"><span>...</span></p>
+            </div>
+            <div class="advisor-card border-equity">
+                <div class="advisor-title">⚖️ Bộ trưởng Xã hội</div>
+                <p id="adv-equity" class="adv-text"><span>...</span></p>
+            </div>
+            <div class="advisor-card border-discipline">
+                <div class="advisor-title">🏛️ Trưởng ban Pháp chế</div>
+                <p id="adv-discipline" class="adv-text"><span>...</span></p>
+            </div>
+        </div>
+        <footer class="modal-footer">
+            <button class="btn btn-secondary w-100" onclick="closeAdvisors()">Đóng Lại</button>
+        </footer>
     </div>
 </div>
 
