@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>The Macro-Pie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+    <!-- CỘT TRÁI: KHUNG GAME CHÍNH -->
+    <div id="game-container">
+        <!-- BUỔI SÁNG: BÁO CÁO -->
+        <section id="phase-morning" class="phase-screen">
+            <div class="newspaper-ui">
+                <h1 id="news-headline">Ngày 1: Bắt đầu nhiệm kỳ</h1>
+                <div id="news-details">Chào mừng Kiến trúc sư trưởng. Hãy đưa ra quyết định sáng suốt!</div>
+                <button onclick="startNoon()">Tới Bàn Làm Việc (Buổi Trưa)</button>
+            </div>
+        </section>
+
+        <!-- BUỔI TRƯA: XỬ LÝ HỒ SƠ -->
+        <section id="phase-noon" class="phase-screen" style="display: none;">
+            <div class="desk-ui">
+                <div id="current-case">
+                    <h2 id="case-title">Đang nạp hồ sơ...</h2>
+                    <p id="case-desc">...</p>
+                </div>
+                <div class="actions">
+                    <button onclick="decideCase(true)" style="background: #27ae60;">ĐÓNG DẤU DUYỆT</button>
+                    <button onclick="decideCase(false)" style="background: #c0392b;">BÁC BỎ</button>
+                    <button onclick="openAdvisors()" style="background: #f39c12; color: #333;">HỎI CỐ VẤN</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUỔI TỐI: CHIA NGÂN SÁCH -->
+        <section id="phase-evening" class="phase-screen" style="display: none;">
+            <div class="sliders-ui">
+                <h2>Chia Ngân Sách Phục Hồi (Còn: <span id="points-left">10</span> điểm)</h2>
+                <p><i>Phân bổ điểm để cứu vãn các chỉ số đang ở mức báo động đỏ!</i></p>
+                
+                <div class="stat-allocate">
+                    <label>Bơm Động lực</label>
+                    <div class="stepper">
+                        <button onclick="adjustPoints('market', -1)">-</button>
+                        <span id="alloc-market">0</span>
+                        <button onclick="adjustPoints('market', 1)">+</button>
+                    </div>
+                </div>
+                <div class="stat-allocate">
+                    <label>Bơm Công bằng</label>
+                    <div class="stepper">
+                        <button onclick="adjustPoints('equity', -1)">-</button>
+                        <span id="alloc-equity">0</span>
+                        <button onclick="adjustPoints('equity', 1)">+</button>
+                    </div>
+                </div>
+                <div class="stat-allocate">
+                    <label>Bơm Kỷ cương</label>
+                    <div class="stepper">
+                        <button onclick="adjustPoints('discipline', -1)">-</button>
+                        <span id="alloc-discipline">0</span>
+                        <button onclick="adjustPoints('discipline', 1)">+</button>
+                    </div>
+                </div>
+                <button onclick="endDay()" style="margin-top: 20px;">Kết Thúc Ngày (Ngủ)</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- CỘT PHẢI: THỐNG KÊ & LỊCH SỬ -->
+    <div id="sidebar">
+        <h3 style="margin-top: 0;">📊 Điểm Hiện Tại</h3>
+        <div class="current-stats">
+            <p>📈 Động lực: <strong id="val-market">50</strong>%</p>
+            <p>⚖️ Công bằng: <strong id="val-equity">50</strong>%</p>
+            <p>🏛️ Kỷ cương: <strong id="val-discipline">50</strong>%</p>
+        </div>
+        
+        <h3>📜 Lịch sử Ảnh hưởng</h3>
+        <div id="history-log">
+            <div class="log-item" style="color: gray; font-style: italic;">
+                Lịch sử trống...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP CỐ VẤN (Mặc định ẩn) -->
+<div id="advisor-modal" style="display: none;">
+    <div class="modal-box">
+        <h2 style="margin-top: 0; border-bottom: 2px solid #ccc; padding-bottom: 10px;">Tham vấn Ý kiến</h2>
+        <p id="adv-market" class="adv-text" style="color: #d35400;"><strong>📈 Bộ trưởng Kinh tế:</strong> <br><span>...</span></p>
+        <p id="adv-equity" class="adv-text" style="color: #27ae60;"><strong>⚖️ Bộ trưởng Xã hội:</strong> <br><span>...</span></p>
+        <p id="adv-discipline" class="adv-text" style="color: #8e44ad;"><strong>🏛️ Trưởng ban Pháp chế:</strong> <br><span>...</span></p>
+        <button onclick="closeAdvisors()" style="background: #7f8c8d; margin-top: 20px;">Đóng Lại</button>
+    </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

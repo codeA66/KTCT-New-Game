@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2c3e50;
+    color: #333;
+    margin: 0;
+    padding: 30px;
+}
+
+#app-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+#game-container {
+    background: #ecf0f1;
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    height: fit-content;
+}
+
+.phase-screen {
+    padding: 30px;
+    text-align: center;
+}
+
+.newspaper-ui, .desk-ui, .sliders-ui {
+    background: white;
+    padding: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background: #2980b9;
+    transition: opacity 0.2s;
+}
+
+button:hover { opacity: 0.8; }
+
+/* Giao diện nút + / - buổi tối */
+.stat-allocate {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.stat-allocate label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+}
+
+.stepper button {
+    margin: 0 10px;
+    padding: 5px 12px;
+    font-size: 18px;
+    background: #e67e22;
+    min-width: 40px;
+}
+
+.stepper span {
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    width: 25px;
+    text-align: center;
+}
+
+/* Giao diện Popup Cố vấn */
+#advisor-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-box {
+    background: white;
+    width: 80%;
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    text-align: left;
+}
+
+.adv-text {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 5px;
+    font-style: italic;
+    margin: 10px 0;
+    border-left: 4px solid currentColor;
+    line-height: 1.5;
+}
+
+/* Giao diện Cột phải (Sidebar) */
+#sidebar {
+    width: 350px;
+    background: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 80vh; 
+}
+
+.current-stats {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #bdc3c7;
+    margin-bottom: 20px;
+}
+
+.current-stats p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+#history-log {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #bdc3c7;
+    font-size: 14px;
+}
+
+.log-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #ccc;
+    line-height: 1.5;
+}
