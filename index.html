@@ -2,109 +2,63 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>The Macro-Pie</title>
+    <title>The Macro-Pie — Menu</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="time-morning">
+<body class="menu-body">
 
-<div id="app-wrapper">
-    <!-- CỘT TRÁI: KHUNG GAME CHÍNH -->
-    <div id="game-container">
-        <!-- CHỈ BÁO BUỔI TRONG NGÀY -->
-        <div id="daytime-indicator" class="daytime-morning">
-            <span id="daytime-icon" class="daytime-icon">🌅</span>
-            <span id="daytime-label">Buổi Sáng</span>
-        </div>
-
-        <!-- BUỔI SÁNG: BÁO CÁO -->
-        <section id="phase-morning" class="phase-screen">
-            <div class="newspaper-ui">
-                <h1 id="news-headline">Ngày 1: Bắt đầu nhiệm kỳ</h1>
-                <div id="news-details">Chào mừng Kiến trúc sư trưởng. Hãy đưa ra quyết định sáng suốt!</div>
-                <button onclick="startNoon()">Tới Bàn Làm Việc (Buổi Trưa)</button>
-            </div>
-        </section>
-
-        <!-- BUỔI TRƯA: XỬ LÝ HỒ SƠ -->
-        <section id="phase-noon" class="phase-screen" style="display: none;">
-            <div class="desk-ui">
-                <div id="current-case">
-                    <h2 id="case-title">Đang nạp hồ sơ...</h2>
-                    <p id="case-desc">...</p>
-                    <div id="stamp-overlay" class="stamp-overlay"></div>
-                </div>
-                <div class="actions">
-                    <button id="btn-approve" onclick="decideCase(true)" style="background: #27ae60;">ĐÓNG DẤU DUYỆT</button>
-                    <button id="btn-reject" onclick="decideCase(false)" style="background: #c0392b;">BÁC BỎ</button>
-                    <button id="btn-advisor" onclick="openAdvisors()" style="background: #f39c12; color: #333;">HỎI CỐ VẤN</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- BUỔI TỐI: CHIA NGÂN SÁCH -->
-        <section id="phase-evening" class="phase-screen" style="display: none;">
-            <div class="sliders-ui">
-                <h2>Chia Ngân Sách Phục Hồi (Còn: <span id="points-left">10</span> điểm)</h2>
-                <p><i>Phân bổ điểm để cứu vãn các chỉ số đang ở mức báo động đỏ!</i></p>
-                
-                <div class="stat-allocate">
-                    <label>Bơm Động lực</label>
-                    <div class="stepper">
-                        <button onclick="adjustPoints('market', -1)">-</button>
-                        <span id="alloc-market">0</span>
-                        <button onclick="adjustPoints('market', 1)">+</button>
-                    </div>
-                </div>
-                <div class="stat-allocate">
-                    <label>Bơm Công bằng</label>
-                    <div class="stepper">
-                        <button onclick="adjustPoints('equity', -1)">-</button>
-                        <span id="alloc-equity">0</span>
-                        <button onclick="adjustPoints('equity', 1)">+</button>
-                    </div>
-                </div>
-                <div class="stat-allocate">
-                    <label>Bơm Kỷ cương</label>
-                    <div class="stepper">
-                        <button onclick="adjustPoints('discipline', -1)">-</button>
-                        <span id="alloc-discipline">0</span>
-                        <button onclick="adjustPoints('discipline', 1)">+</button>
-                    </div>
-                </div>
-                <button onclick="endDay()" style="margin-top: 20px;">Kết Thúc Ngày (Ngủ)</button>
-            </div>
-        </section>
-    </div>
-
-    <!-- CỘT PHẢI: THỐNG KÊ & LỊCH SỬ -->
-    <div id="sidebar">
-        <h3 style="margin-top: 0;">📊 Điểm Hiện Tại</h3>
-        <div class="current-stats">
-            <p>📈 Động lực: <strong id="val-market">50</strong>%</p>
-            <p>⚖️ Công bằng: <strong id="val-equity">50</strong>%</p>
-            <p>🏛️ Kỷ cương: <strong id="val-discipline">50</strong>%</p>
-        </div>
-        
-        <h3>📜 Lịch sử Ảnh hưởng</h3>
-        <div id="history-log">
-            <div class="log-item" style="color: gray; font-style: italic;">
-                Lịch sử trống...
-            </div>
-        </div>
+<div id="phase-menu">
+    <div class="menu-box">
+        <h1 class="menu-title">🥧 The Macro-Pie</h1>
+        <p class="menu-subtitle">Trò chơi hoạch định chính sách vĩ mô</p>
+        <a href="gameplay.html" id="start-btn" class="menu-btn-main" onclick="startGame(event)">▶ Bắt Đầu</a>
+        <button onclick="openInstructions()" class="menu-btn-secondary">📖 Hướng Dẫn</button>
     </div>
 </div>
 
-<!-- POPUP CỐ VẤN (Mặc định ẩn) -->
-<div id="advisor-modal" style="display: none;">
+<!-- OVERLAY HIỆU ỨNG CHUYỂN CẢNH -->
+<div id="transition-overlay">
+    <div id="transition-icon">🥧</div>
+</div>
+
+<!-- POPUP HƯỚNG DẪN -->
+<div id="instructions-modal" style="display: none;">
     <div class="modal-box">
-        <h2 style="margin-top: 0; border-bottom: 2px solid #ccc; padding-bottom: 10px;">Tham vấn Ý kiến</h2>
-        <p id="adv-market" class="adv-text" style="color: #d35400;"><strong>📈 Bộ trưởng Kinh tế:</strong> <br><span>...</span></p>
-        <p id="adv-equity" class="adv-text" style="color: #27ae60;"><strong>⚖️ Bộ trưởng Xã hội:</strong> <br><span>...</span></p>
-        <p id="adv-discipline" class="adv-text" style="color: #8e44ad;"><strong>🏛️ Trưởng ban Pháp chế:</strong> <br><span>...</span></p>
-        <button onclick="closeAdvisors()" style="background: #7f8c8d; margin-top: 20px;">Đóng Lại</button>
+        <h2 style="margin-top: 0; border-bottom: 2px solid #ccc; padding-bottom: 10px;">📖 Hướng Dẫn Chơi</h2>
+        <div class="instructions-text">
+            <p><strong>Mục tiêu:</strong> Giữ 3 chỉ số vĩ mô — Động lực Thị trường, Công bằng Xã hội, Kỷ cương Thể chế — trong khoảng an toàn (0–100%) càng lâu càng tốt. Chạm đáy hoặc kịch trần bất kỳ chỉ số nào cũng khiến thể chế sụp đổ.</p>
+            <p><strong>🌅 Buổi sáng:</strong> Đọc bản tin tổng kết hậu quả từ quyết định hôm qua.</p>
+            <p><strong>🖊️ Buổi trưa:</strong> Xử lý các hồ sơ chính sách. Với mỗi hồ sơ, bạn có thể:</p>
+            <ul>
+                <li><strong>ĐÓNG DẤU DUYỆT</strong> — chấp thuận đề xuất</li>
+                <li><strong>BÁC BỎ</strong> — từ chối đề xuất</li>
+                <li><strong>HỎI CỐ VẤN</strong> — nghe ý kiến từ 3 bộ trưởng trước khi quyết định</li>
+            </ul>
+            <p>Mỗi quyết định sẽ ảnh hưởng đến 3 chỉ số theo các mức độ khác nhau — có lợi mặt này thường phải đánh đổi mặt khác.</p>
+            <p><strong>🌙 Buổi tối:</strong> Bạn có một ngân sách điểm giới hạn để chủ động "bơm" thêm vào các chỉ số đang ở mức báo động, nhằm cân bằng lại trước ngày hôm sau.</p>
+            <p><strong>⚠️ Lưu ý:</strong> Hậu quả của các quyết định buổi trưa chỉ phát huy tác dụng vào sáng hôm sau (có độ trễ), nên hãy cân nhắc kỹ trước khi quyết định.</p>
+        </div>
+        <button onclick="closeInstructions()" style="background: #7f8c8d; margin-top: 20px;">Đã Hiểu, Đóng Lại</button>
     </div>
 </div>
 
-<script src="game.js"></script>
+<script>
+function openInstructions() {
+    document.getElementById('instructions-modal').style.display = 'flex';
+}
+function closeInstructions() {
+    document.getElementById('instructions-modal').style.display = 'none';
+}
+
+function startGame(e) {
+    e.preventDefault();
+    var overlay = document.getElementById('transition-overlay');
+    overlay.classList.add('active');
+    setTimeout(function () {
+        window.location.href = 'gameplay.html';
+    }, 750);
+}
+</script>
+
 </body>
 </html>
