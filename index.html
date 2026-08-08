@@ -8,21 +8,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="menu-body">
 
 <main id="phase-menu">
     <div class="menu-box glass-panel">
-        <div class="menu-logo">🥧</div>
+        <div class="menu-logo"><i data-lucide="pie-chart" style="width:64px; height:64px; margin: 0 auto; display: block; color: var(--text-primary);"></i></div>
         <h1 class="menu-title">The Macro-Pie</h1>
         <p class="menu-subtitle">Strategic Policy Simulator</p>
         
         <div class="menu-actions">
             <a href="gameplay.html" id="start-btn" class="btn btn-primary btn-large" onclick="startGame(event)">
-                <span class="icon">▶</span> Bắt Đầu Nhiệm Kỳ
+                <i data-lucide="play" class="icon" style="width:20px; height:20px;"></i> Bắt Đầu Nhiệm Kỳ
             </a>
             <button onclick="openInstructions()" class="btn btn-secondary btn-large">
-                <span class="icon">📖</span> Tài Liệu Hướng Dẫn
+                <i data-lucide="book-open" class="icon" style="width:20px; height:20px;"></i> Tài Liệu Hướng Dẫn
             </button>
         </div>
     </div>
@@ -30,41 +32,46 @@
 
 <!-- OVERLAY HIỆU ỨNG CHUYỂN CẢNH -->
 <div id="transition-overlay">
-    <div id="transition-icon">🥧</div>
+    <div id="transition-icon"><i data-lucide="pie-chart" style="width:80px; height:80px; color:var(--text-primary);"></i></div>
 </div>
 
 <!-- POPUP HƯỚNG DẪN -->
 <div id="instructions-modal" class="modal-backdrop" style="display: none;">
     <div class="modal-box glass-panel">
         <header class="modal-header">
-            <h2>📖 Hướng Dẫn Điều Hành</h2>
-            <button class="btn-close" aria-label="Close" onclick="closeInstructions()">×</button>
+            <h2 style="display:flex; align-items:center; gap:8px;"><i data-lucide="book-open" style="width:24px; height:24px;"></i> Hướng Dẫn Điều Hành</h2>
+            <button class="btn-close" aria-label="Close" onclick="closeInstructions()">
+                <i data-lucide="x" style="width:24px; height:24px;"></i>
+            </button>
         </header>
         <div class="modal-body instructions-text">
             <p class="objective"><strong>Mục tiêu:</strong> Giữ 3 chỉ số vĩ mô — <strong>Động lực Thị trường</strong>, <strong>Công bằng Xã hội</strong>, <strong>Kỷ cương Thể chế</strong> — trong khoảng an toàn (0–100%) càng lâu càng tốt. Chạm đáy hoặc kịch trần bất kỳ chỉ số nào cũng khiến thể chế sụp đổ.</p>
             
             <div class="instruction-phase">
-                <h3>🌅 Buổi sáng</h3>
+                <h3 style="display:flex; align-items:center; gap:8px;"><i data-lucide="sunrise" style="width:20px; height:20px;"></i> Buổi sáng</h3>
                 <p>Đọc bản tin tổng kết, đánh giá hậu quả từ quyết định hôm qua.</p>
             </div>
 
             <div class="instruction-phase">
-                <h3>🖊️ Buổi trưa</h3>
+                <h3 style="display:flex; align-items:center; gap:8px;"><i data-lucide="briefcase" style="width:20px; height:20px;"></i> Buổi trưa</h3>
                 <p>Xử lý các hồ sơ chính sách. Với mỗi hồ sơ, bạn có thể:</p>
                 <ul class="action-list">
-                    <li><span class="badge badge-approve">ĐÓNG DẤU DUYỆT</span> Chấp thuận đề xuất</li>
-                    <li><span class="badge badge-reject">BÁC BỎ</span> Từ chối đề xuất</li>
-                    <li><span class="badge badge-advisor">HỎI CỐ VẤN</span> Tham vấn ý kiến từ 3 bộ trưởng</li>
+                    <li><span class="badge badge-approve" style="display:inline-flex; align-items:center; gap:4px;"><i data-lucide="check-circle" style="width:14px; height:14px;"></i> ĐÓNG DẤU DUYỆT</span> Chấp thuận đề xuất</li>
+                    <li><span class="badge badge-reject" style="display:inline-flex; align-items:center; gap:4px;"><i data-lucide="x-circle" style="width:14px; height:14px;"></i> BÁC BỎ</span> Từ chối đề xuất</li>
+                    <li><span class="badge badge-advisor" style="display:inline-flex; align-items:center; gap:4px;"><i data-lucide="users" style="width:14px; height:14px;"></i> HỎI CỐ VẤN</span> Tham vấn ý kiến từ 3 bộ trưởng</li>
                 </ul>
             </div>
 
             <div class="instruction-phase">
-                <h3>🌙 Buổi tối</h3>
+                <h3 style="display:flex; align-items:center; gap:8px;"><i data-lucide="moon" style="width:20px; height:20px;"></i> Buổi tối</h3>
                 <p>Sử dụng <strong>Ngân sách dự phòng (10 điểm)</strong> để "bơm" trực tiếp vào các chỉ số đang báo động, cân bằng lại trước ngày mới.</p>
             </div>
             
-            <div class="alert alert-warning">
-                <strong>⚠️ Lưu ý:</strong> Hậu quả của các quyết định buổi trưa chỉ phát huy tác dụng vào sáng hôm sau (có độ trễ). Hãy tính toán cẩn thận!
+            <div class="alert alert-warning" style="display:flex; align-items:flex-start; gap:8px;">
+                <i data-lucide="alert-triangle" style="width:20px; height:20px; flex-shrink:0;"></i>
+                <div>
+                    <strong>Lưu ý:</strong> Hậu quả của các quyết định buổi trưa chỉ phát huy tác dụng vào sáng hôm sau (có độ trễ). Hãy tính toán cẩn thận!
+                </div>
             </div>
         </div>
         <footer class="modal-footer">
@@ -74,6 +81,9 @@
 </div>
 
 <script>
+// Initialize Lucide Icons
+lucide.createIcons();
+
 function openInstructions() {
     const modal = document.getElementById('instructions-modal');
     modal.style.display = 'flex';

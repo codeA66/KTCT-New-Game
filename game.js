@@ -889,7 +889,7 @@ function shuffleArray(arr) {
 
 function startNoon() {
     switchPhase(document.getElementById('phase-morning'), document.getElementById('phase-noon'));
-    setDaytime('☀️', 'Buổi Trưa', 'daytime-noon');
+    setDaytime('', 'Buổi Trưa', 'daytime-noon');
 
     // Đảm bảo nút và dấu mộc ở trạng thái sạch cho ngày mới
     document.getElementById('btn-approve').disabled = false;
@@ -939,9 +939,15 @@ function decideCase(isApproved) {
     stamp.classList.remove('stamp-approve', 'stamp-reject');
     stamp.classList.add(isApproved ? 'stamp-approve' : 'stamp-reject');
     playAnim(stamp, 'stamp-show');
+    
+    // Add shake to card
+    let caseCard = document.getElementById('current-case');
+    caseCard.classList.remove('shake');
+    void caseCard.offsetWidth;
+    caseCard.classList.add('shake');
 
     // Ghi log vào lịch sử NHƯNG ẨN ĐIỂM SỐ
-    let actionText = isApproved ? "<strong style='color:#27ae60;'>DUYỆT</strong>" : "<strong style='color:#c0392b;'>BÁC BỎ</strong>";
+    let actionText = isApproved ? "<strong style='color:var(--color-success);'><i data-lucide='check-circle' style='width:14px;height:14px;vertical-align:middle;'></i> DUYỆT</strong>" : "<strong style='color:var(--color-danger);'><i data-lucide='x-circle' style='width:14px;height:14px;vertical-align:middle;'></i> BÁC BỎ</strong>";
     addHistoryLog(`
         <div style="font-size: 12px; color: gray;">Ngày ${gameState.day} - ${currentData.id}</div>
         <div>Bạn đã <strong>${actionText}</strong> hồ sơ này.</div>
@@ -997,7 +1003,7 @@ function closeAdvisors() {
 // --- 5. LOGIC BUỔI TỐI (CHIA NGÂN SÁCH BẰNG NÚT +/-) ---
 function startEvening() {
     switchPhase(document.getElementById('phase-noon'), document.getElementById('phase-evening'));
-    setDaytime('🌙', 'Buổi Tối', 'daytime-evening');
+    setDaytime('', 'Buổi Tối', 'daytime-evening');
     
     // Reset điểm phân bổ về 0
     gameState.allocated = { market: 0, equity: 0, discipline: 0 };
@@ -1033,7 +1039,7 @@ function endDay() {
         addHistoryLog(`
             <div style="font-size: 12px; color: gray;">Ngày ${gameState.day} - Đêm</div>
             <div>Phân bổ ngân sách dự phòng:</div>
-            <div>📈 ${formatImpact(alloc.market)} | ⚖️ ${formatImpact(alloc.equity)} | 🏛️ ${formatImpact(alloc.discipline)}</div>
+            <div><i data-lucide="trending-up" style="width:14px;height:14px;vertical-align:middle;color:var(--color-market);"></i> ${formatImpact(alloc.market)} | <i data-lucide="scale" style="width:14px;height:14px;vertical-align:middle;color:var(--color-equity);"></i> ${formatImpact(alloc.equity)} | <i data-lucide="landmark" style="width:14px;height:14px;vertical-align:middle;color:var(--color-discipline);"></i> ${formatImpact(alloc.discipline)}</div>
         `);
     }
 
@@ -1063,7 +1069,7 @@ function startMorning() {
         addHistoryLog(`
             <div style="font-size: 12px; color: gray;">Đầu Ngày ${gameState.day}</div>
             <div><strong>Hệ quả các quyết định hôm qua bắt đầu phát tác:</strong></div>
-            <div>📈 ${formatImpact(gameState.bufferStats.marketDynamics)} | ⚖️ ${formatImpact(gameState.bufferStats.socialEquity)} | 🏛️ ${formatImpact(gameState.bufferStats.institutionalDiscipline)}</div>
+            <div><i data-lucide="trending-up" style="width:14px;height:14px;vertical-align:middle;color:var(--color-market);"></i> ${formatImpact(gameState.bufferStats.marketDynamics)} | <i data-lucide="scale" style="width:14px;height:14px;vertical-align:middle;color:var(--color-equity);"></i> ${formatImpact(gameState.bufferStats.socialEquity)} | <i data-lucide="landmark" style="width:14px;height:14px;vertical-align:middle;color:var(--color-discipline);"></i> ${formatImpact(gameState.bufferStats.institutionalDiscipline)}</div>
         `);
     }
     
@@ -1102,7 +1108,7 @@ function startMorning() {
     
     gameState.pendingHeadlines = [];
 
-    setDaytime('🌅', 'Buổi Sáng', 'daytime-morning');
+    setDaytime('', 'Buổi Sáng', 'daytime-morning');
     setTimeout(() => {
         document.getElementById('phase-morning').style.display = 'block';
     }, 320);

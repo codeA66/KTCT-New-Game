@@ -3,75 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Macro-Pie — Sụp Đổ Thể Chế</title>
+    <title>The Macro-Pie — Khủng Hoảng</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="gameover-body">
 
 <main id="phase-gameover">
-    <div class="gameover-box glass-panel crash-panel">
-        <div class="gameover-icon pulse-danger">⚠️</div>
-        <h1 class="gameover-title">CRITICAL FAILURE</h1>
-        <div class="gameover-status-badge">SỤP ĐỔ THỂ CHẾ</div>
+    <div class="crash-panel glass-panel">
+        <div class="gameover-icon pulse-danger"><i data-lucide="alert-triangle" style="width:64px; height:64px; color:var(--color-danger); margin:0 auto; display:block;"></i></div>
+        <h1 class="gameover-title">SYSTEM FAILURE</h1>
+        <div class="gameover-status-badge">KHỦNG HOẢNG THỂ CHẾ TOÀN DIỆN</div>
         
         <div class="gameover-info">
-            <p class="gameover-day" id="go-day">Ngày tại vị: <span>—</span></p>
-            <p class="gameover-reason" id="go-reason">Đang truy xuất nguyên nhân sụp đổ...</p>
+            <div class="gameover-day">Nhiệm kỳ kết thúc tại <span>NGÀY <span id="go-day">0</span></span></div>
+            <p class="gameover-reason" id="go-reason">Đang phân tích nguyên nhân...</p>
         </div>
 
-        <div class="gameover-stats" id="go-stats">
+        <div class="gameover-stats">
             <div class="stat-card">
-                <div class="stat-icon" style="color: var(--color-market)">📈</div>
-                <div class="stat-label">Động lực TT</div>
-                <strong class="stat-value" id="go-val-market">—</strong>
+                <i data-lucide="trending-up" class="stat-icon" style="color:var(--color-market);"></i>
+                <span class="stat-label">Thị trường</span>
+                <span class="stat-value" id="go-market">0</span>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="color: var(--color-equity)">⚖️</div>
-                <div class="stat-label">Công bằng XH</div>
-                <strong class="stat-value" id="go-val-equity">—</strong>
+                <i data-lucide="scale" class="stat-icon" style="color:var(--color-equity);"></i>
+                <span class="stat-label">Xã hội</span>
+                <span class="stat-value" id="go-equity">0</span>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="color: var(--color-discipline)">🏛️</div>
-                <div class="stat-label">Kỷ cương TC</div>
-                <strong class="stat-value" id="go-val-discipline">—</strong>
+                <i data-lucide="landmark" class="stat-icon" style="color:var(--color-discipline);"></i>
+                <span class="stat-label">Thể chế</span>
+                <span class="stat-value" id="go-discipline">0</span>
             </div>
         </div>
-
+        
         <div class="gameover-actions">
             <a href="gameplay.html" class="btn btn-primary btn-large" onclick="sessionStorage.removeItem('macropieGameOver')">
-                <span class="icon">🔄</span> Bắt Đầu Lại Từ Đầu
+                <i data-lucide="refresh-cw" class="icon" style="width:20px; height:20px;"></i> Khởi Động Lại Hệ Thống
             </a>
-            <a href="index.html" class="btn btn-secondary">
-                <span class="icon">🏠</span> Về Trung Tâm Điều Hành
+            <a href="index.html" class="btn btn-secondary btn-large">
+                <i data-lucide="home" class="icon" style="width:20px; height:20px;"></i> Về Màn Hình Chính
             </a>
         </div>
     </div>
 </main>
 
 <script>
-(function () {
-    var raw = sessionStorage.getItem('macropieGameOver');
-    var data = null;
-    try { data = raw ? JSON.parse(raw) : null; } catch (e) { data = null; }
+    lucide.createIcons();
+    
+    (function () {
+        var raw = sessionStorage.getItem('macropieGameOver');
+        var data = null;
+        try { data = raw ? JSON.parse(raw) : null; } catch (e) { data = null; }
 
-    if (!data) {
-        // Không có dữ liệu thua cuộc -> quay về menu
-        window.location.href = 'index.html';
-        return;
-    }
+        if (!data) {
+            window.location.href = 'index.html';
+            return;
+        }
 
-    document.getElementById('go-day').innerHTML = 'Thời gian cầm quyền: <span>' + data.day + ' ngày</span>';
-    document.getElementById('go-reason').innerText = data.reason;
+        document.getElementById('go-day').innerText = data.day;
+        document.getElementById('go-reason').innerText = data.reason;
 
-    if (data.stats) {
-        document.getElementById('go-val-market').innerText = data.stats.marketDynamics + '%';
-        document.getElementById('go-val-equity').innerText = data.stats.socialEquity + '%';
-        document.getElementById('go-val-discipline').innerText = data.stats.institutionalDiscipline + '%';
-    }
-})();
+        if (data.stats) {
+            document.getElementById('go-market').innerText = data.stats.marketDynamics;
+            document.getElementById('go-equity').innerText = data.stats.socialEquity;
+            document.getElementById('go-discipline').innerText = data.stats.institutionalDiscipline;
+        }
+    })();
 </script>
 
 </body>
