@@ -5,11 +5,17 @@
     <title>The Macro-Pie</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="time-morning">
 
 <div id="app-wrapper">
     <!-- CỘT TRÁI: KHUNG GAME CHÍNH -->
     <div id="game-container">
+        <!-- CHỈ BÁO BUỔI TRONG NGÀY -->
+        <div id="daytime-indicator" class="daytime-morning">
+            <span id="daytime-icon" class="daytime-icon">🌅</span>
+            <span id="daytime-label">Buổi Sáng</span>
+        </div>
+
         <!-- BUỔI SÁNG: BÁO CÁO -->
         <section id="phase-morning" class="phase-screen">
             <div class="newspaper-ui">
@@ -25,11 +31,12 @@
                 <div id="current-case">
                     <h2 id="case-title">Đang nạp hồ sơ...</h2>
                     <p id="case-desc">...</p>
+                    <div id="stamp-overlay" class="stamp-overlay"></div>
                 </div>
                 <div class="actions">
-                    <button onclick="decideCase(true)" style="background: #27ae60;">ĐÓNG DẤU DUYỆT</button>
-                    <button onclick="decideCase(false)" style="background: #c0392b;">BÁC BỎ</button>
-                    <button onclick="openAdvisors()" style="background: #f39c12; color: #333;">HỎI CỐ VẤN</button>
+                    <button id="btn-approve" onclick="decideCase(true)" style="background: #27ae60;">ĐÓNG DẤU DUYỆT</button>
+                    <button id="btn-reject" onclick="decideCase(false)" style="background: #c0392b;">BÁC BỎ</button>
+                    <button id="btn-advisor" onclick="openAdvisors()" style="background: #f39c12; color: #333;">HỎI CỐ VẤN</button>
                 </div>
             </div>
         </section>

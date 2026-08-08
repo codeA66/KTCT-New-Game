@@ -11,6 +11,50 @@ let gameState = {
     pendingHeadlines: []
 };
 
+// --- 1b. HIỆU ỨNG CHUYỂN CẢNH & CHỈ BÁO BUỔI TRONG NGÀY ---
+function switchPhase(hideEl, showEl) {
+    if (hideEl && hideEl !== showEl) {
+        hideEl.classList.add('phase-fade-out');
+        setTimeout(() => {
+            hideEl.style.display = 'none';
+            hideEl.classList.remove('phase-fade-out');
+        }, 320);
+        setTimeout(() => {
+            showEl.style.display = 'block';
+        }, 320);
+    } else {
+        showEl.style.display = 'block';
+    }
+}
+
+function setDaytime(icon, label, phaseClass) {
+    let iconEl = document.getElementById('daytime-icon');
+    let labelEl = document.getElementById('daytime-label');
+    let barEl = document.getElementById('daytime-indicator');
+    if (!iconEl || !labelEl || !barEl) return;
+
+    iconEl.innerText = icon;
+    labelEl.innerText = label;
+
+    barEl.classList.remove('daytime-morning', 'daytime-noon', 'daytime-evening');
+    barEl.classList.add(phaseClass);
+
+    // Đổi màu nền toàn trang theo buổi (sáng/trưa/tối)
+    document.body.classList.remove('time-morning', 'time-noon', 'time-evening');
+    document.body.classList.add(phaseClass.replace('daytime-', 'time-'));
+
+    // Buộc trình duyệt reset animation để chạy lại hiệu ứng "pop"
+    iconEl.classList.remove('daytime-pop');
+    void iconEl.offsetWidth;
+    iconEl.classList.add('daytime-pop');
+}
+
+function playAnim(el, className) {
+    el.classList.remove(className);
+    void el.offsetWidth; // buộc reflow để animation chạy lại từ đầu
+    el.classList.add(className);
+}
+
 // --- 2. CƠ SỞ DỮ LIỆU HỒ SƠ CÙNG CỐ VẤN ---
 const caseDatabase = [
     {
@@ -846,8 +890,16 @@ function shuffleArray(arr) {
 }
 
 function startNoon() {
-    document.getElementById('phase-morning').style.display = 'none';
-    document.getElementById('phase-noon').style.display = 'block';
+    switchPhase(document.getElementById('phase-morning'), document.getElementById('phase-noon'));
+    setDaytime('☀️', 'Buổi Trưa', 'daytime-noon');
+
+    // Đảm bảo nút và dấu mộc ở trạng thái sạch cho ngày mới
+    document.getElementById('btn-approve').disabled = false;
+    document.getElementById('btn-reject').disabled = false;
+    document.getElementById('btn-advisor').disabled = false;
+    let stamp = document.getElementById('stamp-overlay');
+    stamp.classList.remove('stamp-show', 'stamp-approve', 'stamp-reject');
+    document.getElementById('current-case').classList.remove('case-slide-out', 'case-slide-in');
     
     // Reset lịch sử vào đầu buổi làm việc
     document.getElementById('history-log').innerHTML = '<div class="log-item" style="color: gray; font-style: italic;">Lịch sử trống...</div>';
@@ -874,7 +926,22 @@ function renderCurrentCase() {
 function decideCase(isApproved) {
     let currentData = gameState.todayCases[gameState.currentCaseIndex];
     let impact = isApproved ? currentData.onApprove : currentData.onReject;
-    
+
+    // Khoá các nút trong lúc chạy animation để tránh bấm nhiều lần
+    let btnApprove = document.getElementById('btn-approve');
+    let btnReject = document.getElementById('btn-reject');
+    let btnAdvisor = document.getElementById('btn-advisor');
+    btnApprove.disabled = true;
+    btnReject.disabled = true;
+    btnAdvisor.disabled = true;
+
+    // Hiện dấu mộc ĐÃ DUYỆT / ĐÃ BÁC BỎ giữa hồ sơ
+    let stamp = document.getElementById('stamp-overlay');
+    stamp.innerText = isApproved ? 'ĐÃ DUYỆT' : 'ĐÃ BÁC BỎ';
+    stamp.classList.remove('stamp-approve', 'stamp-reject');
+    stamp.classList.add(isApproved ? 'stamp-approve' : 'stamp-reject');
+    playAnim(stamp, 'stamp-show');
+
     // Ghi log vào lịch sử NHƯNG ẨN ĐIỂM SỐ
     let actionText = isApproved ? "<strong style='color:#27ae60;'>DUYỆT</strong>" : "<strong style='color:#c0392b;'>BÁC BỎ</strong>";
     addHistoryLog(`
@@ -887,16 +954,31 @@ function decideCase(isApproved) {
     gameState.bufferStats.marketDynamics += impact.market;
     gameState.bufferStats.socialEquity += impact.equity;
     gameState.bufferStats.institutionalDiscipline += impact.discipline;
-    
+
     gameState.pendingHeadlines.push(impact.headline);
     gameState.solvedCases.add(currentData.id);
-    
-    gameState.currentCaseIndex++;
-    if (gameState.currentCaseIndex < gameState.todayCases.length) {
-        renderCurrentCase();
-    } else {
-        startEvening();
-    }
+
+    // Chờ xem dấu mộc xong rồi mới trượt hồ sơ ra và chuyển tiếp
+    setTimeout(() => {
+        let caseEl = document.getElementById('current-case');
+        playAnim(caseEl, 'case-slide-out');
+
+        setTimeout(() => {
+            caseEl.classList.remove('case-slide-out');
+            stamp.classList.remove('stamp-show', 'stamp-approve', 'stamp-reject');
+
+            gameState.currentCaseIndex++;
+            if (gameState.currentCaseIndex < gameState.todayCases.length) {
+                renderCurrentCase();
+                playAnim(caseEl, 'case-slide-in');
+                btnApprove.disabled = false;
+                btnReject.disabled = false;
+                btnAdvisor.disabled = false;
+            } else {
+                startEvening();
+            }
+        }, 350);
+    }, 850);
 }
 
 // --- 4. LOGIC HỎI CỐ VẤN ---
@@ -916,8 +998,8 @@ function closeAdvisors() {
 
 // --- 5. LOGIC BUỔI TỐI (CHIA NGÂN SÁCH BẰNG NÚT +/-) ---
 function startEvening() {
-    document.getElementById('phase-noon').style.display = 'none';
-    document.getElementById('phase-evening').style.display = 'block';
+    switchPhase(document.getElementById('phase-noon'), document.getElementById('phase-evening'));
+    setDaytime('🌙', 'Buổi Tối', 'daytime-evening');
     
     // Reset điểm phân bổ về 0
     gameState.allocated = { market: 0, equity: 0, discipline: 0 };
@@ -968,7 +1050,14 @@ function endDay() {
 
 // --- 6. LOGIC BUỔI SÁNG (NHẬN HẬU QUẢ & GAME OVER) ---
 function startMorning() {
-    document.getElementById('phase-evening').style.display = 'none';
+    let eveningEl = document.getElementById('phase-evening');
+    if (eveningEl.style.display !== 'none') {
+        eveningEl.classList.add('phase-fade-out');
+        setTimeout(() => {
+            eveningEl.style.display = 'none';
+            eveningEl.classList.remove('phase-fade-out');
+        }, 320);
+    }
     
     // Ghi log hệ quả tổng hợp TRƯỚC KHI áp dụng và reset buffer
     if (gameState.day > 1) {
@@ -995,19 +1084,17 @@ function startMorning() {
     // KIỂM TRA SỤP ĐỔ
     let reason = checkGameOver();
     if (reason) {
-        document.getElementById('game-container').innerHTML = `
-            <div style="padding: 40px; text-align:center; color: #c0392b;">
-                <h1>SỤP ĐỔ THỂ CHẾ!</h1>
-                <p><strong>Ngày tại vị: ${gameState.day}</strong></p>
-                <p style="margin-top:20px;">${reason}</p>
-                <button onclick="location.reload()" style="margin-top:30px;">Bắt đầu lại</button>
-            </div>
-        `;
+        // Lưu lại kết quả để trang gameover.html đọc và hiển thị
+        sessionStorage.setItem('macropieGameOver', JSON.stringify({
+            day: gameState.day,
+            reason: reason,
+            stats: gameState.stats
+        }));
+        window.location.href = 'gameover.html';
         return;
     }
     
     // In báo cáo tờ báo
-    document.getElementById('phase-morning').style.display = 'block';
     document.getElementById('news-headline').innerText = `Ngày ${gameState.day}: Điểm tin`;
     
     if(gameState.pendingHeadlines.length > 0) {
@@ -1017,6 +1104,11 @@ function startMorning() {
     }
     
     gameState.pendingHeadlines = [];
+
+    setDaytime('🌅', 'Buổi Sáng', 'daytime-morning');
+    setTimeout(() => {
+        document.getElementById('phase-morning').style.display = 'block';
+    }, 320);
 }
 
 function checkGameOver() {

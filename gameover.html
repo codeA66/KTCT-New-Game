@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>The Macro-Pie — Sụp Đổ Thể Chế</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="gameover-body">
+
+<div id="phase-gameover">
+    <div class="gameover-box">
+        <div class="gameover-icon">💥</div>
+        <h1 class="gameover-title">SỤP ĐỔ THỂ CHẾ!</h1>
+        <p class="gameover-day" id="go-day">Ngày tại vị: —</p>
+        <p class="gameover-reason" id="go-reason">...</p>
+
+        <div class="gameover-stats" id="go-stats">
+            <div class="gameover-stat">
+                <span>📈 Động lực</span>
+                <strong id="go-val-market">—</strong>%
+            </div>
+            <div class="gameover-stat">
+                <span>⚖️ Công bằng</span>
+                <strong id="go-val-equity">—</strong>%
+            </div>
+            <div class="gameover-stat">
+                <span>🏛️ Kỷ cương</span>
+                <strong id="go-val-discipline">—</strong>%
+            </div>
+        </div>
+
+        <a href="index.html" class="menu-btn-main" onclick="sessionStorage.removeItem('macropieGameOver')">🔄 Chơi Lại</a>
+        <a href="menu.html" class="menu-btn-secondary" style="text-decoration:none; box-sizing:border-box; display:block; text-align:center;">🏠 Về Menu</a>
+    </div>
+</div>
+
+<script>
+(function () {
+    var raw = sessionStorage.getItem('macropieGameOver');
+    var data = null;
+    try { data = raw ? JSON.parse(raw) : null; } catch (e) { data = null; }
+
+    if (!data) {
+        // Không có dữ liệu thua cuộc (ví dụ người dùng vào thẳng trang này) -> quay về menu
+        window.location.href = 'menu.html';
+        return;
+    }
+
+    document.getElementById('go-day').innerText = 'Ngày tại vị: ' + data.day;
+    document.getElementById('go-reason').innerText = data.reason;
+
+    if (data.stats) {
+        document.getElementById('go-val-market').innerText = data.stats.marketDynamics;
+        document.getElementById('go-val-equity').innerText = data.stats.socialEquity;
+        document.getElementById('go-val-discipline').innerText = data.stats.institutionalDiscipline;
+    }
+})();
+</script>
+
+</body>
+</html>
