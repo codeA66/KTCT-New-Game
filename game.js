@@ -1161,6 +1161,43 @@ function updateProgressBars() {
     
     let dayDisplay = document.getElementById('current-day-display');
     if (dayDisplay) dayDisplay.innerText = gameState.day;
+
+    // --- BẮT ĐẦU PHẦN CODE CHÈN THÊM CỦA BẠN ---
+    let canhBao = false;
+
+    // Kịch bản kiểm tra điều kiện rớt xuống < 20 hoặc vọt lên > 80[cite: 2]
+    if (m < 20 || m > 80) {
+        document.getElementById('bar-market').parentElement.classList.add("canh-bao");
+        canhBao = true;
+    } else {
+        document.getElementById('bar-market').parentElement.classList.remove("canh-bao");
+    }
+
+    if (e < 20 || e > 80) {
+        document.getElementById('bar-equity').parentElement.classList.add("canh-bao");
+        canhBao = true;
+    } else {
+        document.getElementById('bar-equity').parentElement.classList.remove("canh-bao");
+    }
+
+    if (d < 20 || d > 80) {
+        document.getElementById('bar-discipline').parentElement.classList.add("canh-bao");
+        canhBao = true;
+    } else {
+        document.getElementById('bar-discipline').parentElement.classList.remove("canh-bao");
+    }
+
+    // Điều khiển loa cảnh báo
+    let loaCanhBao = document.getElementById("am-thanh-canh-bao");
+    if (loaCanhBao) {
+        if (canhBao) {
+            if (loaCanhBao.paused) loaCanhBao.play();
+        } else {
+            loaCanhBao.pause();
+            loaCanhBao.currentTime = 0;
+        }
+    }
+ 
 }
 
 // Init on load
