@@ -888,6 +888,10 @@ function shuffleArray(arr) {
 }
 
 function startNoon() {
+let nhacNen = document.getElementById("nhac-nen");
+    if (nhacNen && nhacNen.paused) {
+        nhacNen.play();
+    }
     switchPhase(document.getElementById('phase-morning'), document.getElementById('phase-noon'));
     setDaytime('', 'Buổi Trưa', 'daytime-noon');
 
@@ -1162,7 +1166,7 @@ function updateProgressBars() {
     let dayDisplay = document.getElementById('current-day-display');
     if (dayDisplay) dayDisplay.innerText = gameState.day;
 
-    // --- BẮT ĐẦU PHẦN CODE CHÈN THÊM CỦA BẠN ---
+
     let canhBao = false;
 
     // Kịch bản kiểm tra điều kiện rớt xuống < 20 hoặc vọt lên > 80[cite: 2]
@@ -1188,16 +1192,25 @@ function updateProgressBars() {
     }
 
     // Điều khiển loa cảnh báo
+   // Điều khiển loa cảnh báo
     let loaCanhBao = document.getElementById("am-thanh-canh-bao");
     if (loaCanhBao) {
         if (canhBao) {
-            if (loaCanhBao.paused) loaCanhBao.play();
+            // Nếu còi đang tắt thì bật lên, đồng thời hẹn giờ 3 giây sau tự động tắt
+            if (loaCanhBao.paused) {
+                loaCanhBao.play();
+                
+                setTimeout(function() {
+                    loaCanhBao.pause();
+                    loaCanhBao.currentTime = 0; // Trả băng băng về số 0 để lần sau kêu tiếp
+                }, 3000); // 3000 mili-giây = 3 giây
+            }
         } else {
+            // Nếu an toàn thì tắt luôn còi
             loaCanhBao.pause();
             loaCanhBao.currentTime = 0;
         }
     }
- 
 }
 
 // Init on load
