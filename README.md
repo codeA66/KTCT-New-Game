@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/pie-chart.svg" width="80" alt="Logo">
+  <img src="https://unpkg.com/lucide-static/icons/pie-chart.svg" width="80" alt="Logo">
   
   # The Macro-Pie 🥧
   
