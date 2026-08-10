@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Macro-Pie — Chiến Thắng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="win-body">
+
+<main id="phase-win">
+    <div class="victory-panel glass-panel">
+        <div class="win-icon pulse-success"><i data-lucide="trophy" style="width:64px; height:64px; color:var(--color-success); margin:0 auto; display:block;"></i></div>
+        <h1 class="win-title">NHIỆM KỲ THÀNH CÔNG</h1>
+        <div class="win-status-badge">ỔN ĐỊNH VĨ MÔ BỀN VỮNG</div>
+
+        <div class="win-info">
+            <div class="win-day">Bạn đã lãnh đạo vượt qua <span>NGÀY <span id="win-day">30</span></span></div>
+            <p class="win-reason">Ba trụ cột — Thị trường, Xã hội, Thể chế — được giữ trong vùng an toàn suốt nhiệm kỳ. Đất nước bước vào giai đoạn phát triển ổn định.</p>
+        </div>
+
+        <div class="win-score-box">
+            <div class="win-score-label">Điểm Cân Bằng Vĩ Mô</div>
+            <div class="win-score-value" id="win-score">0</div>
+            <div class="win-score-rank" id="win-rank">—</div>
+        </div>
+
+        <div class="win-stats">
+            <div class="stat-card">
+                <i data-lucide="trending-up" class="stat-icon" style="color:var(--color-market);"></i>
+                <span class="stat-label">Thị trường</span>
+                <span class="stat-value" id="win-market">0</span>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="scale" class="stat-icon" style="color:var(--color-equity);"></i>
+                <span class="stat-label">Xã hội</span>
+                <span class="stat-value" id="win-equity">0</span>
+            </div>
+            <div class="stat-card">
+                <i data-lucide="landmark" class="stat-icon" style="color:var(--color-discipline);"></i>
+                <span class="stat-label">Thể chế</span>
+                <span class="stat-value" id="win-discipline">0</span>
+            </div>
+        </div>
+
+        <div class="win-actions">
+            <a href="gameplay.html" class="btn btn-primary btn-large" onclick="sessionStorage.removeItem('macropieGameWin')">
+                <i data-lucide="refresh-cw" class="icon" style="width:20px; height:20px;"></i> Bắt Đầu Nhiệm Kỳ Mới
+            </a>
+            <a href="index.html" class="btn btn-secondary btn-large">
+                <i data-lucide="home" class="icon" style="width:20px; height:20px;"></i> Về Màn Hình Chính
+            </a>
+        </div>
+    </div>
+</main>
+
+<script>
+    lucide.createIcons();
+
+    (function () {
+        var raw = sessionStorage.getItem('macropieGameWin');
+        var data = null;
+        try { data = raw ? JSON.parse(raw) : null; } catch (e) { data = null; }
+
+        if (!data) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        document.getElementById('win-day').innerText = data.day;
+
+        if (data.stats) {
+            document.getElementById('win-market').innerText = data.stats.marketDynamics;
+            document.getElementById('win-equity').innerText = data.stats.socialEquity;
+            document.getElementById('win-discipline').innerText = data.stats.institutionalDiscipline;
+        }
+
+        var score = typeof data.score === 'number' ? data.score : 0;
+        document.getElementById('win-score').innerText = score;
+
+        var rankEl = document.getElementById('win-rank');
+        var rankText, rankColor;
+        if (score >= 260) { rankText = 'HẠNG XUẤT SẮC — NHÀ CHIẾN LƯỢC ĐẠI TÀI'; rankColor = '#6ee7b7'; }
+        else if (score >= 220) { rankText = 'HẠNG GIỎI — NHÀ ĐIỀU HÀNH VỮNG VÀNG'; rankColor = '#a7f3d0'; }
+        else if (score >= 180) { rankText = 'HẠNG KHÁ — GIỮ ĐƯỢC ĐẠI CỤC'; rankColor = '#fde68a'; }
+        else { rankText = 'HẠNG TRUNG BÌNH — CÁN ĐÍCH TRONG GANG TẤC'; rankColor = '#fca5a5'; }
+        rankEl.innerText = rankText;
+        rankEl.style.color = rankColor;
+    })();
+</script>
+
+</body>
+</html>

@@ -1,4 +1,6 @@
 // --- 1. DỮ LIỆU GAME (STATE) ---
+const WIN_DAY = 30; // Vượt qua ngày này (bước sang ngày 31) mà không sụp đổ thì thắng
+
 let gameState = {
     day: 1,
     stats: { marketDynamics: 50, socialEquity: 50, institutionalDiscipline: 50 },
@@ -1100,6 +1102,17 @@ function startMorning() {
         window.location.href = 'gameover.html';
         return;
     }
+
+    // KIỂM TRA CHIẾN THẮNG: đã vượt qua WIN_DAY ngày mà thể chế vẫn đứng vững
+    if (gameState.day > WIN_DAY) {
+        sessionStorage.setItem('macropieGameWin', JSON.stringify({
+            day: gameState.day - 1,
+            stats: gameState.stats,
+            score: calculateBalanceScore(gameState.stats)
+        }));
+        window.location.href = 'win.html';
+        return;
+    }
     
     // In báo cáo tờ báo
     document.getElementById('news-headline').innerText = `Ngày ${gameState.day}: Điểm tin`;
@@ -1127,6 +1140,16 @@ function checkGameOver() {
     if (s.institutionalDiscipline <= 0) return "Kỷ cương Thể chế chạm đáy: Nhà nước mất kiểm soát, kẽ hở lớn cho các nhóm lợi ích tiêu cực cấu kết lũng đoạn chính sách.";
     if (s.institutionalDiscipline >= 100) return "Kỷ cương Thể chế cực đại: Hệ thống rơi vào cơ chế quản lý kinh tế tập trung bao cấp, duy ý chí.";
     return null;
+}
+
+// Điểm cân bằng vĩ mô: càng gần mốc 50 (an toàn, ổn định) ở cả 3 chỉ số thì điểm càng cao.
+// Tối đa 300 điểm (mỗi chỉ số đóng góp tối đa 100 điểm khi = 50).
+function calculateBalanceScore(stats) {
+    let devMarket = Math.abs(stats.marketDynamics - 50);
+    let devEquity = Math.abs(stats.socialEquity - 50);
+    let devDiscipline = Math.abs(stats.institutionalDiscipline - 50);
+    let score = 300 - 2 * (devMarket + devEquity + devDiscipline);
+    return Math.max(0, Math.round(score));
 }
 
 // --- 7. HÀM HỖ TRỢ LỊCH SỬ ---
@@ -1214,6 +1237,7 @@ function updateProgressBars() {
 }
 
 // Init on load
+
 window.onload = function() { updateProgressBars(); };
 
 document.addEventListener('click', function(event) {
@@ -1227,3 +1251,4 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+
