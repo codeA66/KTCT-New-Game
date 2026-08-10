@@ -1215,3 +1215,15 @@ function updateProgressBars() {
 
 // Init on load
 window.onload = function() { updateProgressBars(); };
+
+document.addEventListener('click', function(event) {
+    // Kiểm tra xem người chơi có bấm vào thẻ <button> hoặc nằm trong nút bấm không
+    let targetButton = event.target.closest('button');
+    if (targetButton) {
+        let clickAudio = document.getElementById("am-thanh-click");
+        if (clickAudio) {
+            clickAudio.currentTime = 0; // Tua về đầu để bấm liên tục vẫn kêu giòn giã
+            clickAudio.play().catch(e => console.log("Click sound error:", e));
+        }
+    }
+});
